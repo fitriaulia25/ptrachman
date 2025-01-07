@@ -10,11 +10,19 @@ use Illuminate\Support\Facades\Storage; // Untuk operasi file
 class AtensiController extends Controller
 {
     // Menampilkan daftar atensi
-    public function index()
+    public function index(Request $request)
     {
-       
+        $query = Atensi::query();
 
-        $data = Atensi::orderBy('tanggal_waktu', 'desc')->get();
+        // Filter berdasarkan tanggal jika ada
+        if ($request->filled('tanggal')) {
+            // Gunakan whereDate untuk memfilter berdasarkan tanggal tanpa waktu
+            $query->whereDate('tanggal_waktu', $request->tanggal);
+        }
+
+        // Ambil data yang sudah difilter berdasarkan tanggal
+        $data = $query->orderBy('tanggal_waktu', 'desc')->get();
+
         return view('atensi.index', compact('data'));
     }
 

@@ -316,8 +316,11 @@
                 <img src="{{ asset('img/lapas.png') }}" alt="Logo" class="logo">
                 <span class="title">JurnalLasgar</span>
             </div>
-            <div class="search-bar">
-                <input type="text" class="form-control" placeholder="Search">
+            <form action="{{ route('search') }}" method="GET" class="form-inline mb-4">
+    <input type="text" name="query" class="form-control" placeholder="Cari Agenda atau Atensi" required>
+    <button type="submit" class="btn btn-primary ml-2">Cari</button>
+</form>
+
                 <div class="dropdown">
     <a href="#" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
     @if($user->photo)
@@ -364,6 +367,7 @@
                             <ul class="dropdown-menu" aria-labelledby="formsDropdown">
                                 <li><a href="{{ route('agenda.index') }}"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
                                 <li><a href="{{ route('atensi.index') }}"><i class="fas fa-list"></i> Atensi</a></li>
+                                <li><a href="{{ route('documents.index') }}"><i class="fas fa-list"></i> Surat</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a href="#"><i class="fas fa-plus"></i> Another Form</a></li>
                             </ul>
@@ -424,6 +428,32 @@
                 sidebar.classList.add("show");
                 mainContent.style.marginLeft = "250px";
             }
+
+            function searchData() {
+        const query = document.getElementById("searchInput").value.toLowerCase();
+
+        // Filter Agenda
+        const agendaItems = document.querySelectorAll("#agendaList .list-group-item");
+        agendaItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(query)) {
+                item.style.display = ""; // Tampilkan item
+            } else {
+                item.style.display = "none"; // Sembunyikan item
+            }
+        });
+
+        // Filter Atensi
+        const atensiItems = document.querySelectorAll("#atensiList .list-group-item");
+        atensiItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(query)) {
+                item.style.display = ""; // Tampilkan item
+            } else {
+                item.style.display = "none"; // Sembunyikan item
+            }
+        });
+    }
         }
     </script>
 </body>

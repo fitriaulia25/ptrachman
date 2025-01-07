@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,7 +10,7 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role', // Pastikan 'role' ada di sini
+        'name', 'email', 'password', 'role', 'can_edit', 'can_delete', 'photo'
     ];
 
     // Metode untuk memeriksa peran
@@ -17,10 +18,9 @@ class User extends Authenticatable
     {
         return $this->role === $role;
     }
-    
+
     public function roles()
     {
-        return $this->belongsToMany(Role::class); // Assuming you have a Role model
+        return $this->belongsToMany(Role::class); // Asumsi Anda memiliki model Role
     }
-
 }

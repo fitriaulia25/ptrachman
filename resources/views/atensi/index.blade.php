@@ -1,11 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
+<head>
+    <!-- Include Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
 <div class="container">
     <h2>Daftar Atensi</h2>
     <!-- Tombol Buat Atensi -->
     <a href="{{ route('atensi.create') }}" class="btn btn-secondary mb-3">Buat Atensi</a>
-
 
     <!-- Notifikasi Sukses -->
     @if (session('success'))
@@ -13,7 +17,7 @@
             {{ session('success') }}
         </div>
     @endif
-    
+
     <!-- Custom CSS -->
     <style>
         .table {
@@ -47,13 +51,21 @@
             left: 20px;
         }
         .fixed-back-button {
-    position: fixed; /* Posisi tetap di layar */
-    bottom: 20px;    /* Jarak dari bawah layar */
-    right: 20px;     /* Jarak dari kanan layar */
-    z-index: 1000;   /* Pastikan berada di atas elemen lain */
-}
-
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
     </style>
+
+    <!-- Form Filter berdasarkan Tanggal -->
+    <form method="GET" action="{{ route('atensi.index') }}" class="mb-3">
+        <div class="form-group d-flex align-items-center">
+            <!-- Input untuk memilih tanggal -->
+            <input type="text" name="tanggal" id="filterTanggal" class="form-control mr-2" placeholder="Pilih tanggal" style="width: 200px;" value="{{ request('tanggal') }}">
+            <button type="submit" class="btn btn-primary">Cari</button>
+        </div>
+    </form>
 
     <!-- Tabel Daftar Atensi -->
     <table class="table table-bordered">
@@ -73,8 +85,8 @@
         <tbody>
             @foreach($data as $atensi)
                 <tr>
-                    <td>{{ $atensi->tanggal_waktu }}</td> <!-- Perbaiki kolom tanggal_waktu -->
-                    <td>{{ $atensi->yth }}</td>                 
+                    <td>{{ $atensi->tanggal_waktu }}</td>
+                    <td>{{ $atensi->yth }}</td>
                     <td>{{ $atensi->kegiatan }}</td>
                     <td>{{ $atensi->pelaksanaan_kegiatan }}</td>
                     <td>{{ $atensi->uraian_kegiatan }}</td>
@@ -82,8 +94,8 @@
                     <td>{{ $atensi->penutup }}</td>
                     <td>
                         @if($atensi->file)
-                        <a href="{{ asset($atensi->file) }}" target="_blank" class="btn btn-secondary btn-sm">Download</a>
-                              @endif
+                            <a href="{{ asset($atensi->file) }}" target="_blank" class="btn btn-secondary btn-sm">Download</a>
+                        @endif
                     </td>
                     <td>
                         <a href="{{ route('atensi.edit', $atensi->id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -98,6 +110,7 @@
         </tbody>
     </table>
 </div>
+
 <div class="d-flex justify-content-end mt-3">
     @if(Auth::user()->role == 'user')
         <a href="{{ route('dashboard') }}" class="btn btn-primary px-4 back-button fixed-back-button">Back</a>
@@ -105,4 +118,13 @@
         <a href="{{ route('super_admin.dashboard') }}" class="btn btn-primary px-4 back-button fixed-back-button">Back</a>
     @endif
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#filterTanggal", {
+            dateFormat: "Y-m-d", // Format sesuai dengan yang digunakan di database
+            locale: "id" // Untuk bahasa Indonesia (opsional)
+        });
+    });
+</script>
 @endsection

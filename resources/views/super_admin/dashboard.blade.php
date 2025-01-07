@@ -192,6 +192,7 @@
                             <ul class="dropdown-menu" aria-labelledby="formsDropdown">
                                 <li><a href="{{ route('agenda.index') }}"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
                                 <li><a href="{{ route('atensi.index') }}"><i class="fas fa-list"></i> Atensi</a></li>
+                                <li><a href="{{ route('documents.index') }}"><i class="fas fa-list"></i> Surat</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a href="#"><i class="fas fa-plus"></i> Another Form</a></li>
                             </ul>

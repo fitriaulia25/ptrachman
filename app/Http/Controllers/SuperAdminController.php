@@ -141,4 +141,6 @@ class SuperAdminController extends Controller
     return redirect()->route('super_admin.users')->with('success', 'User account deleted successfully!');
 }
 
+
+
 }

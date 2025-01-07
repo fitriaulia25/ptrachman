@@ -175,9 +175,21 @@
     <div class="sidebar-and-content">
         <div class="sidebar" id="sidebar">
             <a href="{{ route('super_admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="{{ route('super_admin.dashboard')}}"><i class="fas fa-users"></i> Users</a>
-            <a href="#"><i class="fas fa-cogs"></i> Settings</a>
-            <a href="{{ route('logout') }}" 
+            <a href="{{route('super_admin.users')}}"><i class="fas fa-users"></i> Users</a>
+            <div class="dropdown">
+    <a href="#" class="dropdown-toggle" id="formsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-folder-open"></i> Forms
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="formsDropdown">
+        <li><a class="dropdown-item" href="{{ route('agenda.index') }}"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+        <li><a class="dropdown-item" href="{{ route('atensi.index') }}"><i class="fas fa-list"></i> Atensi</a></li>
+        <li><a class="dropdown-item" href="{{ route('documents.index') }}"><i class="fas fa-list"></i> Surat</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="#"><i class="fas fa-plus"></i> Another Form</a></li>
+    </ul>
+</div>
+
+            <a href="{{ route('logout') }}"
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
@@ -219,7 +231,8 @@
                                 <th>Avatar</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Admin</th>
+                                <th>Role</th>
+                                <th>Access</th>                    
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -246,26 +259,42 @@
         @endif
     </div>
 </td>
- <td>{{ $user->name }}</td>
-<td>{{ $user->email }}</td>
- <td>
-    @if($user->role === 'admin')
-        <i class="fas fa-check-circle text-success" title="Admin"></i>
-              @elseif($user->role === 'super_admin')
-                 <i class="fas fa-check-circle text-success" title="Superadmin"></i>
-                    @else
-                      <i class="fas fa-times-circle text-danger" title="User Biasa"></i>
-                            @endif
-                              </td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->role }}</td>
+            <td>
+                <form action="{{ route('update.access', $user->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-check form-switch">
+                        <input 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            id="accessSwitch{{ $user->id }}" 
+                            name="has_access" 
+                            onchange="this.form.submit()"
+                            {{ $user->has_access ? 'checked' : '' }}>
+                        <label class="form-check-label" for="accessSwitch{{ $user->id }}">
+                            {{ $user->has_access ? 'Enabled' : 'Disabled' }}
+                        </label>
+                    </div>
+                </form>
+            </td>
+
                                 <td>
                                 <a href="{{ route('superadmin.profile.edit', $user->id) }}" ><i class="fas fa-edit"></i></a>
                                 <a href="#" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $user->id }}').submit();">
-                              <i class="fas fa-trash"></i>
-                            </a>
-                             <form id="delete-form-{{ $user->id }}" action="{{ route('superadmin.profile.delete', $user->id) }}" method="POST" style="display: none;">
-                                @csrf
-                                @method('DELETE')
-                                </form>
+    <i class="fas fa-trash"></i>
+</a>
+
+<form id="delete-form-{{ $user->id }}" action="{{ route('superadmin.profile.delete', $user->id) }}" method="POST" style="display: none;">
+    @csrf
+    @method('DELETE')
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+                                    
                                 </td>
                             </tr>
                             @endforeach

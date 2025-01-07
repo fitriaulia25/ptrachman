@@ -10,11 +10,22 @@ use Carbon\Carbon;
 class AgendaController extends Controller
 {
     // Menampilkan daftar agenda
-    public function index() 
+    public function index(request $request) 
     { 
  
         // Mengambil data agenda terbaru berdasarkan data yang diubah terakhir 
         $agendas = Agenda::orderBy('updated_at', 'desc')->get(); 
+
+        
+        $query = Agenda::query();
+
+        // Filter berdasarkan tanggal jika ada
+        if ($request->has('tanggal') && !empty($request->tanggal)) {
+            $query->whereDate('tanggal', $request->tanggal);
+        }
+    
+        $agendas = $query->orderBy('tanggal', 'desc')->get();
+    
      
         return view('agenda.index', compact('agendas')); 
     }
@@ -163,5 +174,25 @@ private function removeOldAgendas()
     if ($count > 5) {
         Agenda::orderBy('tanggal', 'asc')->take($count - 5)->delete();
     }
+    
 }
+public function __construct()
+{
+    $this->middleware('auth'); // Pastikan pengguna login
+    $this->middleware(function ($request, $next) {
+        if (!auth()->user()->can('update-agenda')) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengedit.');
+        }
+        return $next($request);
+    })->only(['update', 'edit']);
+
+    $this->middleware(function ($request, $next) {
+        if (!auth()->user()->can('delete-agenda')) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menghapus.');
+        }
+        return $next($request);
+    })->only('destroy');
+}
+
+
 }

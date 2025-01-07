@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
 <div class="container">
     <h1>Daftar Agenda</h1>
     <a href="{{ route('agenda.create') }}" class="btn btn-secondary mb-3">Buat Agenda</a>
@@ -44,7 +48,13 @@
 }
 
     </style>
-
+<form method="GET" action="{{ route('agenda.index') }}" class="mb-3">
+    <div class="form-group d-flex align-items-center">
+        
+        <input type="text" name="tanggal" id="filterTanggal" class="form-control mr-2" placeholder="Pilih tanggal" style="width: 200px;">
+        <button type="submit" class="btn btn-primary">Cari</button>
+    </div>
+</form>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -103,4 +113,13 @@
     @endif
 </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#filterTanggal", {
+            dateFormat: "Y-m-d", // Format sesuai dengan yang digunakan di database
+            locale: "id" // Untuk bahasa Indonesia (opsional)
+        });
+    });
+</script>
 @endsection

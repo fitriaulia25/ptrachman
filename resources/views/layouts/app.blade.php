@@ -76,3 +76,8 @@
     </div>
 </body>
 </html>
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
