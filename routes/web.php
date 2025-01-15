@@ -111,7 +111,7 @@ Route::middleware(['auth', 'check.roles:user,super_admin'])->group(function () {
     // Menghapus data atensi
     Route::delete('/atensi/{id}', [AtensiController::class, 'destroy'])->name('atensi.destroy');
 
-    Route::put('/user/{id}/access', [UserController::class, 'updateAccess'])->name('update.access');
+    Route::put('/user/{id}/access', [YourController::class, 'updateAccess'])->name('update.access');
 
 
     Route::get('/super_admin/show/{id}/{type}', [SuperAdminController::class, 'show'])->name('super_admin.show');
